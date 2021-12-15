@@ -13,7 +13,8 @@
 
 ## Tasks
 
-### Clarisse
+### Clarisse:
+15 decembre: Visualization of the data. Ideas of study: Do host countries wim more medals ? Does the economic status of the country influence the number of medals won ? 
 
 
 ### Paul
