@@ -15,6 +15,7 @@
 
 ### Clarisse:
 15 decembre: Visualization of the data. Ideas of study: Do host countries wim more medals ? Does the economic status of the country influence the number of medals won ? 
+16 décembre : Analysis to answer the question: "Which Country won the most medals ? " and " Does the number of Countries increased among time ? "
 
 
 ### Paul
