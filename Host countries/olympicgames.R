@@ -323,4 +323,48 @@ medal_counts$NOC <- factor(medal_counts$NOC,levels=levelsTeam$NOC)
 
 ggplot(medal_counts,aes(x=NOC,y=Count,fill=Medal)) + transition_time(Year) + geom_col() + coord_flip() + scale_fill_manual(values=pal(3))
 
+#Link GDP and number of medal by country: 
+athlete_events_2020 <- athlete_events[which(athlete_events$Year == 2016),]
+data_country <- economic_freedom_index2019_data[c(3,5,6,7,8,9,10,11,14,15,22,24,27,30,35,36,41,42,43,45,46,49,51,55,57,58,59,60,63,64,66,74,76,77,78,80,81,82,83,84,85,86,87,91,101,107,113,116,118,122,123,125,126,127,134,135,136,137,138,139,147,150,151,152,155,156,160,161,164,166,170,171,172,175,176,178,180,182,183),]
+athlete_events_2020 <- athlete_events_2020[- which(athlete_events_2020$Team == "Brazil-1"),]
+athlete_events_2020 <- athlete_events_2020[- which(athlete_events_2020$Team == "Czech Republic-1"),]
+athlete_events_2020 <- athlete_events_2020[- which(athlete_events_2020$Team == "Germany-1"),]
+athlete_events_2020 <- athlete_events_2020[-which(athlete_events_2020$Team == "Chinese Taipei"),]
+athlete_events_2020 <- athlete_events_2020[-which(athlete_events_2020$Team == "Grenada"),]
+athlete_events_2020 <- athlete_events_2020[-which(athlete_events_2020$Team == "Indonesia-1"),]
+athlete_events_2020 <- athlete_events_2020[-which(athlete_events_2020$Team == "Italy-1"),]
+athlete_events_2020 <- athlete_events_2020[-which(athlete_events_2020$Team == "Netherlands-1"),]
+athlete_events_2020 <- athlete_events_2020[-which(athlete_events_2020$Team == "Puerto Rico"),]
+athlete_events_2020 <- athlete_events_2020[-which(athlete_events_2020$Team == "Russia-2"),]
+athlete_events_2020 <- athlete_events_2020[-which(athlete_events_2020$Team == "South Korea-1"),]
+athlete_events_2020 <- athlete_events_2020[-which(athlete_events_2020$Team == "Spain-2"),]
+athlete_events_2020 <- athlete_events_2020[-which(athlete_events_2020$Team == "United States-2"),]
+athlete_events_2020 <- athlete_events_2020[-which(athlete_events_2020$Team == "United States-1"),]
+athlete_events_2020 <- athlete_events_2020[-which(athlete_events_2020$Team == "Individual Olympic Athletes"),]
+athlete_events_2020 <- athlete_events_2020[-which(athlete_events_2020$Team == "China-1"),]
+athlete_events_2020 <- athlete_events_2020[-which(athlete_events_2020$Team == "Great Britain"),]
+athlete_events_2020 <- athlete_events_2020[-which(athlete_events_2020$Team == "North Korea"),]
+athlete_events_2020 <- athlete_events_2020[-which(athlete_events_2020$Team == "South Korea"),]
+
+athlete_events_2020 <- athlete_events_2020[order(athlete_events_2020$Team),]
+count5 <- count(athlete_events_2020,vars=Team)
+combined <- data.frame(count5$vars,count5$n,data_country$`GDP per Capita (PPP)`)
+colnames(combined) <- c("Country","Medals","GDP per capita")
+combined$`GDP per capita` <- substr(combined$`GDP per capita`,2,9)
+combined$`GDP per capita` <- as.numeric(combined$`GDP per capita`)
+
+plot(combined$`GDP per capita`,combined$Medals) + xlim(c(0,100)) + ylim(c(0,100))
+abline(lm(combined$Medals ~ combined$`GDP per capita`))
+
+cor(combined$Medals,combined$`GDP per capita`)
+
+#Link population and number of medals: 
+combined2 <- data.frame(count5$vars,count5$n,data_country$`Population (Millions)`)
+colnames(combined2) <- c("Country","Medals","Population")
+combined2$Population <- as.numeric(combined2$Population)
+
+plot(combined2$Population,combined2$Medals) + xlim(c(0,100)) + ylim(c(0,100))
+abline(lm(combined2$Medals ~ combined2$Population))
+cor(combined2$Medals,combined2$Population)
+
 
