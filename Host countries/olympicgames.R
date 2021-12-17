@@ -20,6 +20,7 @@ library(forcats)
 library(lares)
 library(knitr)
 library(ggridges)
+library(gganimate)
 
 #Import data set 
 athlete_events <- read_csv("Desktop/Project_4_SCV/athlete_events.csv")
@@ -287,9 +288,39 @@ country2 <- c("Greece","USA","Spain","China","England","Canada","Russia","Brasil
 data_histo2 <- data.frame(country2,count_world2)
 ggplot(data_histo2,aes(x=country2,y=count_world2,fill=country2)) + geom_col() + labs(c="Genre",y="Log of the Budget") + theme(axis.text.x = element_text(angle=90)) + scale_fill_manual(values= pal(15)) + ylim(c(0,1))
 
+#Has the number of countries increased throughout time ? 
 
+numbers <- athlete_events %>% group_by(Year,Season) %>% summarize(Nations = length(unique(NOC)))
 
+ggplot(numbers,aes(x=Year,y=Nations,color=Season)) + geom_point(size=2) + geom_line() + scale_color_manual(values=pal(16))
 
+#Which nation win the most medals ? 
+medal_counts <- athlete_events %>% group_by(NOC,Medal,Event,Games) %>% summarize(isMedal=1)
+medal_counts <- medal_counts %>% group_by(NOC,Medal) %>% summarize(Count=sum(isMedal))
 
+levelsTeam <- medal_counts %>% group_by(NOC) %>% summarize(Total=sum(Count)) %>% arrange(desc(Total)) %>% select(NOC) %>% slice(30:1)
+
+medal_counts$NOC <- factor(medal_counts$NOC,levels=levelsTeam$NOC)
+
+medal_counts <- medal_counts %>% filter(NOC != "NA")
+
+ggplot(medal_counts, aes(x=NOC, y=Count, fill=Medal)) +
+  geom_col() +
+  coord_flip() +
+  scale_fill_manual(values=pal(3)) +
+  labs(x = "Nations", y = "Count")
+
+#Animated plot: 
+medal_counts <- athlete_events %>% filter(!is.na(Medal)) %>% group_by(NOC,Medal,Event,Games,Year) %>% summarize(isMedal=1)
+
+medal_counts <- medal_counts %>% group_by(NOC,Medal,Year) %>% summarize(Count=sum(isMedal))
+
+medal_counts <- medal_counts %>% select(Medal,NOC,Year,Count)
+
+levelsTeam <- medal_counts %>% group_by(NOC) %>% summarize(Total=sum(Count)) %>% arrange(desc(Total)) %>% select(NOC) %>% slice(10:1)
+
+medal_counts$NOC <- factor(medal_counts$NOC,levels=levelsTeam$NOC)
+
+ggplot(medal_counts,aes(x=NOC,y=Count,fill=Medal)) + transition_time(Year) + geom_col() + coord_flip() + scale_fill_manual(values=pal(3))
 
 
