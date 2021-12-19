@@ -24,6 +24,7 @@ library(gganimate)
 
 #Import data set 
 athlete_events <- read_csv("Desktop/Project_4_SCV/athlete_events.csv")
+economic_freedom_index2019_data <- read_csv("~/Downloads/economic_freedom_index2019_data.csv")
 
 #Palette:
 color <- brewer.pal(9, 'YlOrRd' )
@@ -72,8 +73,11 @@ count1$percentage <- 100*count1$freq /sum(count1$freq)
 count1 <- format(count1,digits=2,justfy="none")
 count1 <- type.convert(count1)
 count1 <- count1[-c(4,5,9,11,12,14,16,17,18,19,22,24,27,28,21,2,25),]
+count1$percentage <- 100*count1$freq /sum(count1$freq)
+count1 <- format(count1,digits=2,justfy="none")
+count1 <- type.convert(count1)
 
-ggplot(count1,aes(x="",y=percentage,fill=Team)) + geom_bar(stat="identity") + coord_polar("y") + scale_fill_manual(values=pal(17)) +labs(x="",y="Medals") + geom_text(aes(x=1.6,label=paste0(percentage,"%")),position=position_stack(vjust=0.5))+ theme(panel.background = element_blank(),axis.line = element_blank(),axis.text = element_blank(),axis.ticks = element_blank(),axis.title = element_blank())
+ggplot(count1,aes(x="",y=percentage,fill=Team)) + geom_bar(stat="identity") + coord_polar("y")   +labs(x="",y="Medals") + geom_text(aes(x=1.6,label=paste0(percentage,"%")),position=position_stack(vjust=0.5))+ theme(panel.background = element_blank(),axis.line = element_blank(),axis.text = element_blank(),axis.ticks = element_blank(),axis.title = element_blank())
 
 #Pie chart2 : Number of Medals won by French Team in Winter games: 
 fr_med_fr <- length(which(france_host$Team == "France"))
@@ -91,7 +95,7 @@ count2$percentage <- 100*count2$y /sum(count2$y)
 count2 <- format(count2,digits=2,justfy="none")
 count2 <- type.convert(count2)
 colnames(count2) <- c("Country","Count","Percentage")
-ggplot(count2,aes(x="",y=Count, fill=Country)) + geom_bar(stat="identity") + coord_polar("y") + scale_fill_manual(values=pal(17)) +labs(x="",y="Medals") + theme(panel.background = element_blank(),axis.line = element_blank(),axis.text = element_blank(),axis.ticks = element_blank(),axis.title = element_blank()) + geom_text(aes(x=1.6,label=paste0(Percentage,"%")),position=position_stack(vjust=0.5))
+ggplot(count2,aes(x="",y=Count, fill=Country)) + geom_bar(stat="identity") + coord_polar("y") +labs(x="",y="Medals") + theme(panel.background = element_blank(),axis.line = element_blank(),axis.text = element_blank(),axis.ticks = element_blank(),axis.title = element_blank()) + geom_text(aes(x=1.6,label=paste0(Percentage,"%")),position=position_stack(vjust=0.5))
 
 #Russia: 
 team_russia <- Russia_host[which(Russia_host$Team == "Russia"),]
@@ -168,7 +172,7 @@ prop_canada_total <- length(team_canada$ID)/length(Canada_host$ID)
 count_world <- c(prop_france_total,prop_italy_total,prop_austria_total,prop_USA_total,prop_norway_total,prop_japan_total,prop_russia_total,prop_canada_total)
 country <- c("France","Italy","Austria","USA","Norway","Japan","Russia","Canada")
 data_histo <- data.frame(country,count_world)
-ggplot(data_histo,aes(x=country,y=count_world,fill=country)) + geom_col() + labs(c="Genre",y="Log of the Budget") + theme(axis.text.x = element_text(angle=90)) + scale_fill_manual(values= pal(15)) + ylim(c(0,1))
+ggplot(data_histo,aes(x=country,y=count_world,fill=country)) + geom_col() + labs(x="Country",y="Proportion of medals") + theme(axis.text.x = element_text(angle=90)) + ylim(c(0,0.5))
 
 #Summer Games
 table(as.factor(athlete_events_summer$City))
@@ -196,6 +200,7 @@ prop_china_gold <- length(which(team_china$Medal == "Gold"))/(length(which(China
 prop_china_silver <- length(which(team_china$Medal == "Silver"))/(length(which(China_host$Medal == "Silver")))
 prop_china_bronze <- length(which(team_china$Medal == "Bronze"))/(length(which(China_host$Medal == "Bronze"))) 
 prop_china_total <- length(team_china$ID)/length(China_host$ID)
+
 #Pie chart1: 
 #Number of Medals by country
 count4 <- count(China_host, vars="Team")
@@ -203,12 +208,12 @@ count4 <- count(China_host, vars="Team")
 count4$percentage <- 100*count4$freq /sum(count4$freq)
 count4 <- format(count4,digits=2,justfy="none")
 count4 <- type.convert(count4)
-count4 <- count1[-c(1,2,4,6,7,8,10,11,13,14,15,16,18,21,22,20,23,24,25,27,29,30,31,32,33,34,35,36,37,39,42,45,46,47,48,49,50,56,57,57,59,60,61,62,63,64,65,69,71,73,76,77,79,80,81,82,84,86,87,88,89,90,92,93,94,95,96,97,100,101,102,103,104,105),]
+count4 <- count4[-c(1,2,4,6,7,8,10,11,13,14,15,16,18,21,22,20,23,24,25,27,29,30,31,32,33,34,35,36,37,39,42,45,46,47,48,49,50,56,57,57,59,60,61,62,63,64,65,69,71,73,76,77,79,80,81,82,84,86,87,88,89,90,92,93,94,95,96,97,100,101,102,103,104,105,28,44,52,54,55,58,67,70,78,91,3,9,26,43,68,72,74,98),]
 count4$percentage <- 100*count4$freq /sum(count4$freq)
 count4 <- format(count4,digits=2,justfy="none")
 count4 <- type.convert(count4)
 
-ggplot(count4,aes(x="",y=percentage,fill=Team)) + geom_bar(stat="identity") + coord_polar("y") + scale_fill_manual(values=pal(32)) +labs(x="",y="Medals") + geom_text(aes(x=1.6,label=paste0(percentage,"%")),position=position_stack(vjust=0.5))+ theme(panel.background = element_blank(),axis.line = element_blank(),axis.text = element_blank(),axis.ticks = element_blank(),axis.title = element_blank())
+ggplot(count4,aes(x="",y=percentage,fill=Team)) + geom_bar(stat="identity") + coord_polar("y")  +labs(x="",y="Medals") + geom_text(aes(x=1.6,label=paste0(percentage,"%")),position=position_stack(vjust=0.5))+ theme(panel.background = element_blank(),axis.line = element_blank(),axis.text = element_blank(),axis.ticks = element_blank(),axis.title = element_blank())
 
 #Greece : 
 team_greece <- Greece_host[which(Greece_host$Team == "Greece"),]
@@ -283,16 +288,16 @@ prop_australia_bronze <- length(which(team_australia$Medal == "Bronze"))/(length
 prop_australia_total <- length(team_australia$ID)/length(Australia_host$ID)
 
 #Histogram of proportion the medals won by a host country:
-count_world2 <- c(prop_greece_total,prop_USA_total_summer,prop_spain_total,prop_china_total,prop_england_total,prop_canada_summer_total,prop_russia_summer_total,prop_brasil_total,prop_sk_total,prop_australia_total)
+count_world2 <- c(prop_greece_total,prop_usa_summer_total,prop_spain_total,prop_china_total,prop_england_total,prop_canada_summer_total,prop_russia_summer_total,prop_brasil_total,prop_sk_total,prop_australia_total)
 country2 <- c("Greece","USA","Spain","China","England","Canada","Russia","Brasil","Sk","Australia")
 data_histo2 <- data.frame(country2,count_world2)
-ggplot(data_histo2,aes(x=country2,y=count_world2,fill=country2)) + geom_col() + labs(c="Genre",y="Log of the Budget") + theme(axis.text.x = element_text(angle=90)) + scale_fill_manual(values= pal(15)) + ylim(c(0,1))
+ggplot(data_histo2,aes(x=country2,y=count_world2,fill=country2)) + geom_col() + labs(x="Country",y="Proportion of medals") + theme(axis.text.x = element_text(angle=90)) + ylim(c(0,0.5))
 
 #Has the number of countries increased throughout time ? 
 
 numbers <- athlete_events %>% group_by(Year,Season) %>% summarize(Nations = length(unique(NOC)))
 
-ggplot(numbers,aes(x=Year,y=Nations,color=Season)) + geom_point(size=2) + geom_line() + scale_color_manual(values=pal(16))
+ggplot(numbers,aes(x=Year,y=Nations,color=Season)) + geom_point(size=2) + geom_line() 
 
 #Which nation win the most medals ? 
 medal_counts <- athlete_events %>% group_by(NOC,Medal,Event,Games) %>% summarize(isMedal=1)
@@ -307,7 +312,6 @@ medal_counts <- medal_counts %>% filter(NOC != "NA")
 ggplot(medal_counts, aes(x=NOC, y=Count, fill=Medal)) +
   geom_col() +
   coord_flip() +
-  scale_fill_manual(values=pal(3)) +
   labs(x = "Nations", y = "Count")
 
 #Animated plot: 
@@ -351,10 +355,10 @@ count5 <- count(athlete_events_2020,vars=Team)
 combined <- data.frame(count5$vars,count5$n,data_country$`GDP per Capita (PPP)`)
 colnames(combined) <- c("Country","Medals","GDP per capita")
 combined$`GDP per capita` <- substr(combined$`GDP per capita`,2,9)
+combined$`GDP per capita` <- as.factor(combined$`GDP per capita`)
 combined$`GDP per capita` <- as.numeric(combined$`GDP per capita`)
 
-plot(combined$`GDP per capita`,combined$Medals) + xlim(c(0,100)) + ylim(c(0,100))
-abline(lm(combined$Medals ~ combined$`GDP per capita`))
+ggplot(combined,aes(x=`GDP per capita`,y=Medals)) +geom_point() + geom_smooth(method=lm) + ylim(c(0,150))
 
 cor(combined$Medals,combined$`GDP per capita`)
 
@@ -363,8 +367,187 @@ combined2 <- data.frame(count5$vars,count5$n,data_country$`Population (Millions)
 colnames(combined2) <- c("Country","Medals","Population")
 combined2$Population <- as.numeric(combined2$Population)
 
-plot(combined2$Population,combined2$Medals) + xlim(c(0,100)) + ylim(c(0,100))
-abline(lm(combined2$Medals ~ combined2$Population))
+ggplot(combined2,aes(x=Population,y=Medals)) +geom_point() + geom_smooth(method=lm) + xlim(c(0,300))
+
 cor(combined2$Medals,combined2$Population)
+
+#Box plot USA for summer Games:
+nb_medals1_usa <- athlete_events_summer[which(athlete_events_summer$Team == "United States" & athlete_events_summer$Year == 1976),]
+nb_medals2_usa <- athlete_events_summer[which(athlete_events_summer$Team == "United States" & athlete_events_summer$Year == 1984),]
+nb_medals3_usa <- athlete_events_summer[which(athlete_events_summer$Team == "United States" & athlete_events_summer$Year == 1988),]
+nb_medals4_usa <- athlete_events_summer[which(athlete_events_summer$Team == "United States" & athlete_events_summer$Year == 1992),]
+nb_medals5_usa <- athlete_events_summer[which(athlete_events_summer$Team == "United States" & athlete_events_summer$Year == 1996),]
+nb_medals6_usa <- athlete_events_summer[which(athlete_events_summer$Team == "United States" & athlete_events_summer$Year == 2000),]
+nb_medals7_usa <- athlete_events_summer[which(athlete_events_summer$Team == "United States" & athlete_events_summer$Year == 2004),]
+nb_medals8_usa <- athlete_events_summer[which(athlete_events_summer$Team == "United States" & athlete_events_summer$Year == 2008),]
+nb_medals9_usa <- athlete_events_summer[which(athlete_events_summer$Team == "United States" & athlete_events_summer$Year == 2012),]
+nb_medals10_usa <- athlete_events_summer[which(athlete_events_summer$Team == "United States" & athlete_events_summer$Year == 2016),]
+
+y1 <- c(length(nb_medals1_usa$ID),length(nb_medals2_usa$ID),length(nb_medals3_usa$ID),length(nb_medals4_usa$ID),length(nb_medals5_usa$ID),length(nb_medals6_usa$ID),length(nb_medals7_usa$ID),length(nb_medals8_usa$ID),length(nb_medals9_usa$ID),length(nb_medals10_usa$ID))
+time <- c(1976,1984,1988,1992,1996,2000,2004,2008,2012,2016)
+
+dat1 <- data.frame(time,y1)
+colnames(dat1) <- c("Time","Medals")
+
+ggplot(dat1,aes(x=time,y=y1)) + geom_point(size=2) + geom_line() + scale_x_continuous(breaks=c(1976,1984,1988,1992,1996,2000,2004,2008,2012,2016)) + labs(x="Year",y="Number of medals")
+
+#Box plot Greece for summer Games:
+nb_medals1_gr <- athlete_events_summer[which(athlete_events_summer$Team == "Greece" & athlete_events_summer$Year == 1980),]
+nb_medals2_gr <- athlete_events_summer[which(athlete_events_summer$Team == "Greece" & athlete_events_summer$Year == 1984),]
+nb_medals3_gr <- athlete_events_summer[which(athlete_events_summer$Team == "Greece" & athlete_events_summer$Year == 1988),]
+nb_medals4_gr <- athlete_events_summer[which(athlete_events_summer$Team == "Greece" & athlete_events_summer$Year == 1992),]
+nb_medals5_gr <- athlete_events_summer[which(athlete_events_summer$Team == "Greece" & athlete_events_summer$Year == 1996),]
+nb_medals6_gr <- athlete_events_summer[which(athlete_events_summer$Team == "Greece" & athlete_events_summer$Year == 2000),]
+nb_medals7_gr <- athlete_events_summer[which(athlete_events_summer$Team == "Greece" & athlete_events_summer$Year == 2004),]
+nb_medals8_gr <- athlete_events_summer[which(athlete_events_summer$Team == "Greece" & athlete_events_summer$Year == 2008),]
+nb_medals9_gr<- athlete_events_summer[which(athlete_events_summer$Team == "Greece" & athlete_events_summer$Year == 2012),]
+nb_medals10_gr <- athlete_events_summer[which(athlete_events_summer$Team == "Greece" & athlete_events_summer$Year == 2016),]
+
+y2 <- c(length(nb_medals1_gr$ID),length(nb_medals2_gr$ID),length(nb_medals3_gr$ID),length(nb_medals4_gr$ID),length(nb_medals5_gr$ID),length(nb_medals6_gr$ID),length(nb_medals7_gr$ID),length(nb_medals8_gr$ID),length(nb_medals9_gr$ID),length(nb_medals10_gr$ID))
+time <- c(1976,1984,1988,1992,1996,2000,2004,2008,2012,2016)
+dat2 <- data.frame(time,y2)
+colnames(dat2) <- c("Time","Medals")
+
+#Box plot Spain for summer Games:
+nb_medals1_sp <- athlete_events_summer[which(athlete_events_summer$Team == "Spain" & athlete_events_summer$Year == 1976),]
+nb_medals2_sp <- athlete_events_summer[which(athlete_events_summer$Team == "Spain" & athlete_events_summer$Year == 1984),]
+nb_medals3_sp <- athlete_events_summer[which(athlete_events_summer$Team == "Spain" & athlete_events_summer$Year == 1988),]
+nb_medals4_sp <- athlete_events_summer[which(athlete_events_summer$Team == "Spain" & athlete_events_summer$Year == 1992),]
+nb_medals5_sp <- athlete_events_summer[which(athlete_events_summer$Team == "Spain" & athlete_events_summer$Year == 1996),]
+nb_medals6_sp <- athlete_events_summer[which(athlete_events_summer$Team == "Spain" & athlete_events_summer$Year == 2000),]
+nb_medals7_sp <- athlete_events_summer[which(athlete_events_summer$Team == "Spain" & athlete_events_summer$Year == 2004),]
+nb_medals8_sp <- athlete_events_summer[which(athlete_events_summer$Team == "Spain" & athlete_events_summer$Year == 2008),]
+nb_medals9_sp <- athlete_events_summer[which(athlete_events_summer$Team == "Spain" & athlete_events_summer$Year == 2012),]
+nb_medals10_sp <- athlete_events_summer[which(athlete_events_summer$Team == "Spain" & athlete_events_summer$Year == 2016),]
+
+y3 <- c(length(nb_medals1_sp$ID),length(nb_medals2_sp$ID),length(nb_medals3_sp$ID),length(nb_medals4_sp$ID),length(nb_medals5_sp$ID),length(nb_medals6_sp$ID),length(nb_medals7_sp$ID),length(nb_medals8_sp$ID),length(nb_medals9_sp$ID),length(nb_medals10_sp$ID))
+time <- c(1976,1984,1988,1992,1996,2000,2004,2008,2012,2016)
+dat3 <- data.frame(time,y3)
+colnames(dat3) <- c("Time","Medals")
+
+#Box plot China for summer Games:
+nb_medals2_ch <- athlete_events_summer[which(athlete_events_summer$Team == "China" & athlete_events_summer$Year == 1984),]
+nb_medals3_ch <- athlete_events_summer[which(athlete_events_summer$Team == "China" & athlete_events_summer$Year == 1988),]
+nb_medals4_ch <- athlete_events_summer[which(athlete_events_summer$Team == "China" & athlete_events_summer$Year == 1992),]
+nb_medals5_ch <- athlete_events_summer[which(athlete_events_summer$Team == "China" & athlete_events_summer$Year == 1996),]
+nb_medals6_ch <- athlete_events_summer[which(athlete_events_summer$Team == "China" & athlete_events_summer$Year == 2000),]
+nb_medals7_ch <- athlete_events_summer[which(athlete_events_summer$Team == "China" & athlete_events_summer$Year == 2004),]
+nb_medals8_ch <- athlete_events_summer[which(athlete_events_summer$Team == "China" & athlete_events_summer$Year == 2008),]
+nb_medals9_ch <- athlete_events_summer[which(athlete_events_summer$Team == "China" & athlete_events_summer$Year == 2012),]
+nb_medals10_ch <- athlete_events_summer[which(athlete_events_summer$Team == "China" & athlete_events_summer$Year == 2016),]
+
+y4 <- c(length(nb_medals2_ch$ID),length(nb_medals3_ch$ID),length(nb_medals4_ch$ID),length(nb_medals5_ch$ID),length(nb_medals6_ch$ID),length(nb_medals7_ch$ID),length(nb_medals8_ch$ID),length(nb_medals9_ch$ID),length(nb_medals10_ch$ID))
+time <- c(1984,1988,1992,1996,2000,2004,2008,2012,2016)
+dat4 <- data.frame(time,y4)
+colnames(dat4) <- c("Time","Medals")
+
+#Box plot UK for summer Games:
+nb_medals1_uk <- athlete_events_summer[which(athlete_events_summer$Team == "Great Britain" & athlete_events_summer$Year == 1976),]
+nb_medals2_uk <- athlete_events_summer[which(athlete_events_summer$Team == "Great Britain" & athlete_events_summer$Year == 1984),]
+nb_medals3_uk <- athlete_events_summer[which(athlete_events_summer$Team == "Great Britain" & athlete_events_summer$Year == 1988),]
+nb_medals4_uk<- athlete_events_summer[which(athlete_events_summer$Team == "Great Britain" & athlete_events_summer$Year == 1992),]
+nb_medals5_uk <- athlete_events_summer[which(athlete_events_summer$Team == "Great Britain" & athlete_events_summer$Year == 1996),]
+nb_medals6_uk <- athlete_events_summer[which(athlete_events_summer$Team == "Great Britain" & athlete_events_summer$Year == 2000),]
+nb_medals7_uk <- athlete_events_summer[which(athlete_events_summer$Team == "Great Britain" & athlete_events_summer$Year == 2004),]
+nb_medals8_uk <- athlete_events_summer[which(athlete_events_summer$Team == "Great Britain" & athlete_events_summer$Year == 2008),]
+nb_medals9_uk <- athlete_events_summer[which(athlete_events_summer$Team == "Great Britain" & athlete_events_summer$Year == 2012),]
+nb_medals10_uk <- athlete_events_summer[which(athlete_events_summer$Team == "Great Britain" & athlete_events_summer$Year == 2016),]
+
+y5 <- c(length(nb_medals1_uk$ID),length(nb_medals2_uk$ID),length(nb_medals3_uk$ID),length(nb_medals4_uk$ID),length(nb_medals5_uk$ID),length(nb_medals6_uk$ID),length(nb_medals7_uk$ID),length(nb_medals8_uk$ID),length(nb_medals9_uk$ID),length(nb_medals10_uk$ID))
+time <- c(1976,1984,1988,1992,1996,2000,2004,2008,2012,2016)
+dat5 <- data.frame(time,y5)
+colnames(dat5) <- c("Time","Medals")
+
+#Box plot Canada for summer Games:
+nb_medals1_ca <- athlete_events_summer[which(athlete_events_summer$Team == "Canada" & athlete_events_summer$Year == 1976),]
+nb_medals2_ca <- athlete_events_summer[which(athlete_events_summer$Team == "Canada" & athlete_events_summer$Year == 1984),]
+nb_medals3_ca <- athlete_events_summer[which(athlete_events_summer$Team == "Canada" & athlete_events_summer$Year == 1988),]
+nb_medals4_ca<- athlete_events_summer[which(athlete_events_summer$Team == "Canada" & athlete_events_summer$Year == 1992),]
+nb_medals5_ca <- athlete_events_summer[which(athlete_events_summer$Team == "Canada" & athlete_events_summer$Year == 1996),]
+nb_medals6_ca <- athlete_events_summer[which(athlete_events_summer$Team == "Canada" & athlete_events_summer$Year == 2000),]
+nb_medals7_ca <- athlete_events_summer[which(athlete_events_summer$Team == "Canada" & athlete_events_summer$Year == 2004),]
+nb_medals8_ca <- athlete_events_summer[which(athlete_events_summer$Team == "Canada" & athlete_events_summer$Year == 2008),]
+nb_medals9_ca <- athlete_events_summer[which(athlete_events_summer$Team == "Canada" & athlete_events_summer$Year == 2012),]
+nb_medals10_ca <- athlete_events_summer[which(athlete_events_summer$Team == "Canada" & athlete_events_summer$Year == 2016),]
+
+y6 <- c(length(nb_medals1_ca$ID),length(nb_medals2_ca$ID),length(nb_medals3_ca$ID),length(nb_medals4_ca$ID),length(nb_medals5_ca$ID),length(nb_medals6_ca$ID),length(nb_medals7_ca$ID),length(nb_medals8_ca$ID),length(nb_medals9_ca$ID),length(nb_medals10_ca$ID))
+time <- c(1976,1984,1988,1992,1996,2000,2004,2008,2012,2016)
+dat6 <- data.frame(time,y6)
+colnames(dat6) <- c("Time","Medals")
+
+#Box plot Russia for summer Games:
+nb_medals1_ru <- athlete_events_summer[which(athlete_events_summer$Team == "Soviet Union" & athlete_events_summer$Year == 1976),]
+nb_medals3_ru <- athlete_events_summer[which(athlete_events_summer$Team == "Soviet Union" & athlete_events_summer$Year == 1988),]
+nb_medals5_ru <- athlete_events_summer[which(athlete_events_summer$Team == "Russia" & athlete_events_summer$Year == 1996),]
+nb_medals6_ru <- athlete_events_summer[which(athlete_events_summer$Team == "Russia" & athlete_events_summer$Year == 2000),]
+nb_medals7_ru <- athlete_events_summer[which(athlete_events_summer$Team == "Russia" & athlete_events_summer$Year == 2004),]
+nb_medals8_ru <- athlete_events_summer[which(athlete_events_summer$Team == "Russia" & athlete_events_summer$Year == 2008),]
+nb_medals9_ru <- athlete_events_summer[which(athlete_events_summer$Team == "Russia" & athlete_events_summer$Year == 2012),]
+nb_medals10_ru <- athlete_events_summer[which(athlete_events_summer$Team == "Russia" & athlete_events_summer$Year == 2016),]
+
+y7 <- c(length(nb_medals1_ru$ID),length(nb_medals3_ru$ID),length(nb_medals5_ru$ID),length(nb_medals6_ru$ID),length(nb_medals7_ru$ID),length(nb_medals8_ru$ID),length(nb_medals9_ru$ID),length(nb_medals10_ru$ID))
+time <- c(1976,1988,1996,2000,2004,2008,2012,2016)
+dat7 <- data.frame(time,y7)
+colnames(dat7) <- c("Time","Medals")
+
+#Box plot Brasil for summer Games:
+nb_medals1_br <- athlete_events_summer[which(athlete_events_summer$Team == "Brazil" & athlete_events_summer$Year == 1976),]
+nb_medals2_br <- athlete_events_summer[which(athlete_events_summer$Team == "Brazil" & athlete_events_summer$Year == 1984),]
+nb_medals3_br <- athlete_events_summer[which(athlete_events_summer$Team == "Brazil" & athlete_events_summer$Year == 1988),]
+nb_medals4_br <- athlete_events_summer[which(athlete_events_summer$Team == "Brazil" & athlete_events_summer$Year == 1992),]
+nb_medals5_br <- athlete_events_summer[which(athlete_events_summer$Team == "Brazil" & athlete_events_summer$Year == 1996),]
+nb_medals6_br <- athlete_events_summer[which(athlete_events_summer$Team == "Brazil" & athlete_events_summer$Year == 2000),]
+nb_medals7_br <- athlete_events_summer[which(athlete_events_summer$Team == "Brazil" & athlete_events_summer$Year == 2004),]
+nb_medals8_br <- athlete_events_summer[which(athlete_events_summer$Team == "Brazil" & athlete_events_summer$Year == 2008),]
+nb_medals9_br <- athlete_events_summer[which(athlete_events_summer$Team == "Brazil" & athlete_events_summer$Year == 2012),]
+nb_medals10_br <- athlete_events_summer[which(athlete_events_summer$Team == "Brazil" & athlete_events_summer$Year == 2016),]
+
+y8<- c(length(nb_medals1_br$ID),length(nb_medals2_br$ID),length(nb_medals3_br$ID),length(nb_medals4_br$ID),length(nb_medals5_br$ID),length(nb_medals6_br$ID),length(nb_medals7_br$ID),length(nb_medals8_br$ID),length(nb_medals9_br$ID),length(nb_medals10_br$ID))
+time <- c(1976,1984,1988,1992,1996,2000,2004,2008,2012,2016)
+dat8 <- data.frame(time,y8)
+colnames(dat8) <- c("Time","Medals")
+
+#Box plot Brasil for summer Games:
+nb_medals1_aus <- athlete_events_summer[which(athlete_events_summer$Team == "Australia" & athlete_events_summer$Year == 1976),]
+nb_medals2_aus <- athlete_events_summer[which(athlete_events_summer$Team == "Australia" & athlete_events_summer$Year == 1984),]
+nb_medals3_aus <- athlete_events_summer[which(athlete_events_summer$Team == "Australia" & athlete_events_summer$Year == 1988),]
+nb_medals4_aus <- athlete_events_summer[which(athlete_events_summer$Team == "Australia" & athlete_events_summer$Year == 1992),]
+nb_medals5_aus <- athlete_events_summer[which(athlete_events_summer$Team == "Australia" & athlete_events_summer$Year == 1996),]
+nb_medals6_aus <- athlete_events_summer[which(athlete_events_summer$Team == "Australia" & athlete_events_summer$Year == 2000),]
+nb_medals7_aus <- athlete_events_summer[which(athlete_events_summer$Team == "Australia" & athlete_events_summer$Year == 2004),]
+nb_medals8_aus <- athlete_events_summer[which(athlete_events_summer$Team == "Australia" & athlete_events_summer$Year == 2008),]
+nb_medals9_aus <- athlete_events_summer[which(athlete_events_summer$Team == "Australia" & athlete_events_summer$Year == 2012),]
+nb_medals10_aus <- athlete_events_summer[which(athlete_events_summer$Team == "Australia" & athlete_events_summer$Year == 2016),]
+
+y9 <- c(length(nb_medals1_aus$ID),length(nb_medals2_aus$ID),length(nb_medals3_aus$ID),length(nb_medals4_aus$ID),length(nb_medals5_aus$ID),length(nb_medals6_aus$ID),length(nb_medals7_aus$ID),length(nb_medals8_aus$ID),length(nb_medals9_aus$ID),length(nb_medals10_aus$ID))
+time <- c(1976,1984,1988,1992,1996,2000,2004,2008,2012,2016)
+dat9 <- data.frame(time,y9)
+colnames(dat9) <- c("Time","Medals")
+
+#Box plot South Corea for summer Games:
+nb_medals1_sc <- athlete_events_summer[which(athlete_events_summer$Team == "South Korea" & athlete_events_summer$Year == 1976),]
+nb_medals2_sc <- athlete_events_summer[which(athlete_events_summer$Team == "South Korea" & athlete_events_summer$Year == 1984),]
+nb_medals3_sc <- athlete_events_summer[which(athlete_events_summer$Team == "South Korea" & athlete_events_summer$Year == 1988),]
+nb_medals4_sc <- athlete_events_summer[which(athlete_events_summer$Team == "South Korea" & athlete_events_summer$Year == 1992),]
+nb_medals5_sc <- athlete_events_summer[which(athlete_events_summer$Team == "South Korea" & athlete_events_summer$Year == 1996),]
+nb_medals6_sc <- athlete_events_summer[which(athlete_events_summer$Team == "South Korea" & athlete_events_summer$Year == 2000),]
+nb_medals7_sc <- athlete_events_summer[which(athlete_events_summer$Team == "South Korea" & athlete_events_summer$Year == 2004),]
+nb_medals8_sc <- athlete_events_summer[which(athlete_events_summer$Team == "South Korea" & athlete_events_summer$Year == 2008),]
+nb_medals9_sc <- athlete_events_summer[which(athlete_events_summer$Team == "South Korea" & athlete_events_summer$Year == 2012),]
+nb_medals10_sc <- athlete_events_summer[which(athlete_events_summer$Team == "South Korea" & athlete_events_summer$Year == 2016),]
+
+y10 <- c(length(nb_medals1_sc$ID),length(nb_medals2_sc$ID),length(nb_medals3_sc$ID),length(nb_medals4_sc$ID),length(nb_medals5_sc$ID),length(nb_medals6_sc$ID),length(nb_medals7_sc$ID),length(nb_medals8_sc$ID),length(nb_medals9_sc$ID),length(nb_medals10_sc$ID))
+time <- c(1976,1984,1988,1992,1996,2000,2004,2008,2012,2016)
+dat10 <- data.frame(time,y10)
+colnames(dat10) <- c("Time","Medals")
+
+bigdata <- rbind(dat1,dat2,dat3,dat4,dat5,dat6,dat7,dat8,dat9,dat10)
+bigdata$country <- c(rep("USA",10),rep("Greece",10),rep("Spain",10),rep("China",9),rep("UK",10),rep("Canada",10),rep("Russia",8),rep("Brazil",10),rep("Australia",10),rep("South Korea",10))
+
+ggplot(bigdata,aes(x=country,y=Medals,fill=country)) + geom_boxplot() + labs(x="Country",y="Number of Medals")  + theme(axis.text.x = element_text(angle=90))
+
+ggplot(bigdata,aes(x=Time,y=Medals,color=country)) + geom_point(size=1) + geom_line() + scale_x_continuous(breaks=c(1976,1980,1984,1988,1992,1996,2000,2004,2008,2012,2016)) + labs(x="Year",y="Number of medals")
+
+
 
 
